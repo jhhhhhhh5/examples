@@ -1,64 +1,74 @@
-import { Chat } from './chat'
-import { FileExplorer } from './file-explorer'
-import { Header } from './header'
-import { Horizontal, Vertical } from '@/components/layout/panels'
-import { Logs } from './logs'
-import { Preview } from './preview'
-import { TabContent, TabItem } from '@/components/tabs'
-import { Welcome } from '@/components/modals/welcome'
-import { cookies } from 'next/headers'
-import { getHorizontal, getVertical } from '@/components/layout/sizing'
-import { hideBanner } from '@/app/actions'
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
-export default async function Page() {
-  const store = await cookies()
-  const banner = store.get('banner-hidden')?.value !== 'true'
-  const horizontalSizes = getHorizontal(store)
-  const verticalSizes = getVertical(store)
+export default function Portfolio() {
   return (
-    <>
-      <Welcome defaultOpen={banner} onDismissAction={hideBanner} />
-      <div className="flex flex-col h-screen max-h-screen overflow-hidden p-2 space-x-2">
-        <Header className="flex items-center w-full" />
-        <ul className="flex space-x-5 font-mono text-sm tracking-tight px-1 py-2 md:hidden">
-          <TabItem tabId="chat">Chat</TabItem>
-          <TabItem tabId="preview">Preview</TabItem>
-          <TabItem tabId="file-explorer">File Explorer</TabItem>
-          <TabItem tabId="logs">Logs</TabItem>
-        </ul>
+    <div className="bg-black text-white min-h-screen font-sans">
+      {/* Hero Section */}
+      <section className="h-screen flex flex-col justify-center items-center text-center px-6">
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-5xl md:text-7xl font-bold"
+        >
+          Your Name
+        </motion.h1>
 
-        {/* Mobile layout tabs taking the whole space*/}
-        <div className="flex flex-1 w-full overflow-hidden pt-2 md:hidden">
-          <TabContent tabId="chat" className="flex-1">
-            <Chat className="flex-1 overflow-hidden" />
-          </TabContent>
-          <TabContent tabId="preview" className="flex-1">
-            <Preview className="flex-1 overflow-hidden" />
-          </TabContent>
-          <TabContent tabId="file-explorer" className="flex-1">
-            <FileExplorer className="flex-1 overflow-hidden" />
-          </TabContent>
-          <TabContent tabId="logs" className="flex-1">
-            <Logs className="flex-1 overflow-hidden" />
-          </TabContent>
-        </div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="mt-4 text-lg text-gray-400"
+        >
+          Videography Portfolio
+        </motion.p>
 
-        {/* Desktop layout with horizontal and vertical panels */}
-        <div className="hidden flex-1 w-full min-h-0 overflow-hidden pt-2 md:flex">
-          <Horizontal
-            defaultLayout={horizontalSizes ?? [50, 50]}
-            left={<Chat className="flex-1 overflow-hidden" />}
-            right={
-              <Vertical
-                defaultLayout={verticalSizes ?? [33.33, 33.33, 33.33]}
-                top={<Preview className="flex-1 overflow-hidden" />}
-                middle={<FileExplorer className="flex-1 overflow-hidden" />}
-                bottom={<Logs className="flex-1 overflow-hidden" />}
-              />
-            }
-          />
-        </div>
-      </div>
-    </>
-  )
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-8"
+        >
+          <Button className="bg-white text-black rounded-2xl px-6 py-3">
+            View Work
+          </Button>
+        </motion.div>
+      </section>
+
+      {/* Video Grid */}
+      <section className="px-6 md:px-20 py-20 grid grid-cols-1 md:grid-cols-2 gap-10">
+        {[1, 2, 3, 4].map((item) => (
+          <motion.div
+            key={item}
+            whileHover={{ scale: 1.05 }}
+            className="rounded-2xl overflow-hidden shadow-lg bg-gray-900"
+          >
+            <div className="aspect-video bg-gray-800 flex items-center justify-center">
+              <span className="text-gray-500">Video {item}</span>
+            </div>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* About */}
+      <section className="text-center px-6 pb-20">
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-gray-400 max-w-xl mx-auto"
+        >
+          I create cinematic visuals and tell stories through video.
+        </motion.p>
+      </section>
+
+      {/* Contact */}
+      <section className="text-center pb-20">
+        <Button className="bg-white text-black rounded-2xl px-6 py-3">
+          Contact Me
+        </Button>
+      </section>
+    </div>
+  );
 }
